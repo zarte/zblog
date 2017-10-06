@@ -1,0 +1,121 @@
+<include file="Public/header" />
+
+		<div class="main clearfix">
+			<include file="Public/menu" />
+			<div class="main-content">
+				<div>
+					
+				</div>
+				<div class="content-main">
+					<table class="list-table">
+						<thead>
+							<tr><th></th><th>Id</th><th>文章</th><th>上级id</th><th>用户名</th><th>邮箱</th><th>内容</th><th>添加时间</th><th>操作</th>
+							</tr>
+						</thead>
+						<tbody id="list">
+						 <volist  name="list" id="vo" >
+							<tr>
+								<td>
+								</td>
+								<td>{$vo.id}</td>
+								<td>{$vo.aid}</td>
+								<td>{$vo.pid}</td>
+								<td>{$vo.user_name}</td>
+								<td>{$vo.email}</td>
+								<td>{$vo.content}</td>
+								<td>{$vo.add_time}</td>
+								<td><button class="danger-btn" data-id="{$vo.id}">删除</button></td>
+							</tr>
+							</volist>
+						</tbody>
+					</table>
+				</div>
+				 <div class="pagination pagination-centered">
+                {$page}
+            	</div>
+			</div>
+		</div>
+		<include file="Public/footer" />
+		
+		<div id="pop-form-div" class="disn">
+			<form>
+				<input type="hidden" name="id" value="">
+				<div class="item-div">
+					<input type="text" name="cate_name" value="" placeholder="请输入分类名">
+				</div>
+				<div class="item-div">
+					<input type="text" name="order" value="" placeholder="排序">
+				</div>
+				<div class="item-div">
+					<button class="normal-btn">提交</button>
+					<button class="edit-btn">取消</button>
+				</div>
+			</form>
+		</div>
+</body>
+<script type="text/javascript">
+	var ajaxini = true;
+	$('.add-cate').on('click',function(){
+		$('#pop-form-div').find('input').val('');
+		$('#pop-form-div').show();
+	});
+	$('#pop-form-div').on('click','.edit-btn',function(){
+		$('#pop-form-div').hide();
+		return false;
+	});
+	
+	
+	$('#list').on('click','.danger-btn',function(){
+		var id = $(this).attr('data-id');
+		$.ajax({
+			url:'{:U('Comment/del')}',
+			data:{
+				id:id
+			},
+			type:'post',
+			dataType:'json',
+			success:function(data){
+				if(data.code==200){
+					 window.location.reload();
+				}else{
+					alert(data.msg);
+				}
+				
+			}
+		});
+	});
+	
+	$('.pagination').on('click','a',function(){
+		if($(this).attr('data-url')){
+			$.ajax({
+				url:$(this).attr('data-url'),
+				type:'post',
+				data:{
+					flag:'tt'
+				},
+				dataType:'json',
+				success:function(data){
+					if(data.list){
+						var str = '';
+						for(var i in data.list){
+							str+='<tr><td></td>';
+							str+='<td>'+data.list[i]['id']+'</td>';
+							str+='<td>'+data.list[i]['aid']+'</td>';
+							str+='<td>'+data.list[i]['pid']+'</td>';
+							str+='<td>'+data.list[i]['user_name']+'</td>';
+							str+='<td>'+data.list[i]['email']+'</td>';
+							str+='<td>'+data.list[i]['content']+'</td>';
+							str+='<td>'+data.list[i]['add_time']+'</td>';
+							str+='<td><button class="danger-btn" data-id="'+data.list[i]['id']+'">删除</button></td></tr>';
+						
+						}
+						 $('#list').html(str);
+						 $('.pagination').html(data.page);
+					}
+				}
+			});
+		}
+	})
+
+</script>
+</html>

@@ -1,0 +1,17 @@
+@CHARSET "UTF-8";
+
+body{
+	    font: 12px Microsoft YaHei,arial,Helvetica,sans-serif;
+}
+
+body,ul,li,input,select,p{
+	margin:0;
+	padding:0;
+}
+
+ul,li{
+	list-style:none;
+}
+a{
+	text-decoration:none;
+}

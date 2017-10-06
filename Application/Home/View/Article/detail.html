@@ -1,0 +1,212 @@
+<include file="Public/header" />
+	<!-- 头部 -->
+	<header class="clear">
+		<div class="logo">
+		<a href="{:U('Index/index')}"><img src="/Public/images/img1.gif"></a>
+		</div>
+		
+	</header>
+	<!-- 头部end -->
+	
+	<div class="ibody">
+		<div class="article">
+			<div class="head  tc">
+				<p class="title">{$data['title']}</p>
+				<p class="author">作者：zarte 时间: {$data['add_date']|substr=0,11}</p>
+			</div>
+			<div >
+				{$data['content']}
+			</div>
+		</div>
+		
+		<div class="comment-div">
+			<ul class="comment-list">
+				
+			</ul>
+			<p class="more-comment">加载更多</p>
+		</div>
+		
+		<div class="edit-comment">
+			<input type="text" name="username" placeholder="用户名(长度2~16)" maxlength="16">
+			<input type="text" name="email" placeholder="邮箱" maxlength="32">
+			<p class="reply-tip" style="display:none;"><span></span>&nbsp;&nbsp;<i class="remove" style="cursor:pointer;">X</i></p>
+			<textarea name="comment"></textarea>
+			<input type="text" name="checkcode" placeholder="验证码" maxlength="4">
+			<img class="checkimg" src="{:U('Verify/verify1')}">
+			<input class="postcomment" type="button" value="提交">
+		</div>
+	</div>
+	<include file="Public/footer" />
+	<!-- 底部end -->
+</body>
+	<script>
+	var pid = 0;
+	  var checkreg = {
+	            'username':/^[\u4e00-\u9fa5A-Za-z0-9_]{2,16}$/,
+	            'email':/^([0-9A-Za-z_\-]+)@[0-9a-z]+\.[a-z]{2,3}$/,
+	             'password':/^[A-Za-z0-9_\.\+\*\-]{6,16}$/,
+	             'number':/^[0-9]+$/
+	         };
+	  
+	var ajaxini= true;
+	//回复
+	$('.comment-list').on('click','.reply',function(){
+		pid = $(this).attr('data-id');
+		username  = $(this).attr('data-name');
+		$('.edit-comment .reply-tip span').text('回复:'+username+'\r\n');
+		$('.edit-comment .reply-tip').show();
+		$('.edit-comment textarea[name="comment"]').focus();
+	});
+	$('.edit-comment .remove').click(function(){
+		pid = 0;
+		$(this).parent().hide();
+	});
+	//加载
+	$('.comment-list').on('click','.more-child-comment',function(){
+		$(this).hide();
+		var _this = this;
+		var id = $(this).attr('data-id');
+		var page = $(this).attr('data-page');
+		
+		$.ajax({
+			url:'{:U('Comment/morechild')}',
+			data:{
+				aid:{$data['id']},
+				pid:id,
+				page:page
+			},
+			type:'post',
+			dataType:'json',
+			success:function(data){
+				if(data.code==200){
+					var str = '';
+					for(var i in data.data){
+						str +='<li><div class="child-comment-item"><div class="user-avatar"><img class="avatar" src="/Public/images/default_avatar.jpg" /><span>'+data.data[i]['user_name']+'</span></div>';
+						str +='<div class="commet-content"><div><p>'+data.data[i]['content']+'</p></div>';
+						str +='<div class="info"><p><a data-id="'+id+'" data-name="'+data.data[i]['user_name']+'" class="reply"><span>回复</span></a>&nbsp;&nbsp;&nbsp;<span>'+data.data[i]['add_time']+'</span></p></div></div></div></li>';
+					}
+					$(_this).siblings('ul').append(str);
+					page++;
+					$(_this).attr('data-page',page);
+					if(str)$(_this).show();
+				}
+			}
+		});
+		
+	});
+	
+	$('.checkimg').click(function(){
+		$(this).attr('src',$(this).attr('src')+'?'+Math.random());
+	});
+	$('.postcomment').on('click',function(){
+		var username = $('input[name="username"]').val();
+		var email = $('input[name="email"]').val();
+		var comment = $('textarea[name="comment"]').val();
+		var checkcode = $('input[name="checkcode"]').val();
+		
+            if(!checkcode){
+            	alert('请输入验证码');
+                return false;
+            }
+		  
+		  //用户名
+            if(username){
+                if(!checkreg.username.test(username)){
+                    alert('用户名格式不符');
+                    return false;
+                }
+            }else{
+                alert('请输入用户名');
+                return false;
+            }
+           
+            if(email){
+                if(!checkreg.email.test(email)){
+                    alert('邮箱格式不符');
+                    return false;
+                }
+            }
+            if(!comment){
+            	 alert('评论不能为空');
+                 return false;
+            }
+
+		if(ajaxini){
+			ajaxini = false;
+			if(pid>0){
+				comment = $('.edit-comment .reply-tip span').text()+'\r\n'+comment;
+			}
+			$.ajax({
+				url:'{:U('Comment/add')}',
+				data:{
+					username:username,
+					email:email,
+					comment:comment,
+					aid:{$data['id']},
+					pid:pid,
+					verify:checkcode
+				},
+				type:'post',
+				dataType:'json',
+				success:function(data){
+					if(data.code==200){
+						window.location.reload();
+					}else{
+						alert(data.msg);
+					}
+					ajaxini = true;
+				}
+			});
+		}
+	})
+	
+	//评论加载
+	var page = 1;
+	function getcommentlist(){
+		if(ajaxini){
+			ajaxini = false;
+			$.ajax({
+				url:'{:U('Comment/commentlist')}',
+				data:{
+					page:page,
+					id:"{$data['id']}",
+				},
+				type:'post',
+				dataType:'json',
+				success:function(data){
+					if(data.code==200){
+						var str = '';
+						for(var i in data.data){
+							str +='<li class="list-item"><div class="parent-comment"><div class="user-avatar"><img class="avatar" src="/Public/images/default_avatar.jpg" />';
+							str +='<span>'+data.data[i]['user_name']+'</span></div><div class="commet-content">';
+							str +='<div><p>'+data.data[i]['content']+'</p></div>';
+							str +='<div class="info"><p><a data-id="'+data.data[i]['id']+'" data-name="'+data.data[i]['user_name']+'" class="reply"><span>回复</span></a>&nbsp;&nbsp;&nbsp;<span>'+data.data[i]['add_time']+'</span></p></div></div></div>';
+							if(data.data[i]['children']){
+								str +='<div class="child-comment"><ul>';
+								for(var j in data.data[i]['children']){
+									str +='<li><div class="child-comment-item"><div class="user-avatar"><img class="avatar" src="/Public/images/default_avatar.jpg" /><span>'+data.data[i]['children'][j]['user_name']+'</span></div>';
+									str +='<div class="commet-content"><div><p>'+data.data[i]['children'][j]['content']+'</p></div>';
+									str +='<div class="info"><p><a data-id="'+data.data[i]['id']+'" data-name="'+data.data[i]['children'][j]['user_name']+'" class="reply"><span>回复</span></a>&nbsp;&nbsp;&nbsp;<span>'+data.data[i]['children'][j]['add_time']+'</span></p></div></div></div></li>';
+								}
+								str +='</ul><p class="more-child-comment" data-id="'+data.data[i]['id']+'" data-page="2">加载更多</p></div>';
+							}
+							str+='</li>';
+						}
+						$('.comment-list').append(str);
+					}
+					page++;
+					ajaxini = true;
+					if(str)$('.more-comment').show();
+				}
+			});
+		}
+	}
+	
+	
+	getcommentlist();
+	$('.more-comment').click(function(){
+		$(this).hide();
+		getcommentlist();
+	});
+	</script>
+</html>

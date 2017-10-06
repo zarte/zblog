@@ -1,0 +1,267 @@
+@CHARSET "UTF-8";
+
+.disn{
+	display:none;
+}
+.clear {zoom:1;}    /*==for IE6/7 Maxthon2==*/
+.clear :after {
+	clear:both;content:'.';
+	display:block;
+	width: 0;
+	height: 0;
+	visibility:hidden;
+} 
+.ibody{
+	width:1024px;
+	margin:0 auto;
+}
+.tc{
+	text-align:center;
+}
+.c-red{
+	color:red;
+}
+header{
+	width:1024px;
+	height:60px;
+	margin:0 auto;
+	text-align: center;
+	position:relative;
+	margin-bottom:10px;
+	background-color:#4c6584;
+	
+}
+
+header .search-div{
+	float:right;
+	height:60px;
+}
+.search-div div{
+	margin-top:20px;
+	height:30px;
+	bottom:0;
+}
+.search-div div input,.search-div div select{
+	height:30px;
+	line-height:30px;
+	width:100px;
+	vertical-align: top;
+}
+header .logo{
+	float:left;
+}
+header .logo img{
+	width:100px;
+	height:60px;
+}
+header .home{
+	width:100px;
+	height:60px;
+	margin-left:-50px;
+	left:50%;
+	position:absoulte;
+}
+
+.blog-list{
+	width:1024px;
+	margin:0 auto;
+}
+.blog-list .nomore{
+	text-align: center;
+    font-size: 16px;
+    padding: 5px;
+}
+.blog-list .list-item{
+	border: 3px solid #d5d5d8;
+	margin-bottom:10px;
+	position: relative;
+	
+}
+.list-item .title{
+	height:30px;
+	font-size: 18px;
+	border-bottom: 1px solid #d5d5d8;
+}
+.list-item .title p{
+	height:30px;
+	line-height:30px;
+	padding-left:20px;
+
+}
+.list-item .content{
+	height:100px;
+	padding:10px;
+	overflow: hidden;
+}
+.list-item .content p{
+	width:998px;
+	font-size:16px;	
+	text-indent: 32px;
+}
+.list-item .item-bottom{
+	height:30px;
+}
+.item-bottom .bottom-info{
+	border-top:1px solid #d5d5d8;
+	border-left:1px solid #d5d5d8;
+	height:30px;
+	width:250px;
+	position:absolute;
+	right:0;
+	bottom:0;
+	color: #716c6c;
+}
+.item-bottom .bottom-info p{
+	line-height: 29px;
+    padding-left: 5px;
+}
+footer{
+	width:1024px;
+	margin:0 auto;
+	background-color:red;
+	height: 40px;
+    text-align: center;
+	background-color: #444343;
+}
+footer p{
+	line-height:40px;
+	height: 40px;
+	color:white;
+	font-size: 16;
+}
+
+
+.article{
+	border-bottom:1px solid #d5d5d8;
+	padding-bottom:10px;
+}
+.article .head .title{
+	font-size: 24px;
+	padding-bottom:5px;
+	border-bottom:1px solid #d5d5d8;
+	margin-bottom:5px;
+}
+.article .head{
+	margin-bottom:5px;
+}
+.comment-div{
+	padding:10px 0;
+	border-bottom:1px solid #d5d5d8;
+}
+.comment-list .list-item{
+	border:1px solid #d5d5d8;
+	margin:5px 0px;
+	padding:3px;
+}
+.comment-list .list-item .user-avatar{
+	display:inline-block;
+	width:150px;
+	text-align: center;
+}
+.comment-list .list-item .user-avatar img{
+	    width: 80px;
+    height: 80px;
+    display: block;
+    margin: 5px 35px
+}
+.comment-list .list-item .commet-content{
+	display:inline-block;
+	width:844px;
+	margin:0px 9px;
+	vertical-align:top;
+}
+.comment-list .list-item .commet-content div{
+	height:50px
+	
+}
+.comment-list .list-item .commet-content .info{
+	height:30px;
+	text-align: right;
+}
+.commet-content .info p{
+	height:30px;
+	line-height:30px;
+	
+}
+.comment-list .parent-comment{
+	border-bottom: 1px dashed #ddd;
+}
+.comment-list .child-comment{
+	margin-left: 100px;
+   
+}
+.comment-list .child-comment .commet-content{
+	    width: 744px;
+}
+.comment-list .child-comment .child-comment-item{
+	 padding-top: 10px;
+	    border-bottom: 1px dashed #ddd;
+}
+.comment-list .child-comment li:last-child .child-comment-item{
+	    border-bottom: 0;
+}
+.comment-list .child-comment .more-child-comment{
+	text-align: center;
+    color: #178be0;
+    cursor: pointer;
+}
+.comment-div .more-comment{
+	text-align: center;
+    color: #178be0;
+    cursor: pointer;
+}
+.comment-list .reply{
+	cursor:pointer;
+	color:blue;
+}
+
+.edit-comment{
+	margin-bottom:10px;
+}
+.edit-comment input{
+	display:block;
+	width:150px;
+	height:30px;
+	margin-top:5px;
+}
+.edit-comment textarea{
+	margin-top:5px;
+	width:350px;
+	height:100px;
+}
+.edit-comment img{
+	width:150px;
+	height:30px;
+	margin-top:5px;
+}
+
+.login-div{
+	position:fixed;
+	top:20%;
+	left:50%;
+	width:300px;
+	margin-left:-150px;
+	border:1px solid #ded7d7;
+	padding:20px 10;
+	background-color: rgba(253, 253, 253, 0.55);
+}
+.login-div ul li{
+	height:40px;
+	text-align: center;
+	margin:15px 0;
+}
+.login-div ul li img{
+	width:80px;
+	height:30px;
+}
+.login-div ul li input{
+	width:200px;
+	height:30px;
+}
+.login-div ul>p{
+	padding-left:20px;
+}
+.login-body{
+	background:url('../images/login_back.jpg');
+	background-size: 100% 100%;
+}

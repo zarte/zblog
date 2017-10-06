@@ -1,0 +1,173 @@
+<include file="Public/header" />
+
+	<!-- 头部 -->
+	<header class="clear">
+		<div class="logo">
+		<a href="{:U('Index/index')}"><img src="/Public/images/img1.gif"></a>
+		</div>
+		<div class="search-div">
+			<div>
+				<select name="class" class='cate-select'>
+					<option value="">选择分类</option>
+					<volist  name="cate_list" id="vo"  key="k">
+					<option value="{$k}">{$vo}</option>
+					</volist>
+				</select>
+			</div>
+		</div>
+	</header>
+	<!-- 头部end -->
+	
+	<!-- 主体 -->
+	<div class="blog-list">
+		<!--文章列表项 -->
+		<div class="list-item">
+			<div class="title"><p>文章标题</p></div>
+			<div class="content">
+				<p>文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容
+				文章内容文章内容文章内容文章内容文章内容文章内容文章内容
+				文章内容文章内容文章内容文章内容文章内容文章内容</p>
+			</div>
+			<div class="item-bottom">
+				<div class="bottom-info">
+					<p>
+						时间<span>2017-06-17 11:11:11</span>点击数：<span>15</span>
+					</p>
+				</div>
+			</div>
+		</div>
+		
+		<div class="list-item">
+			<div class="title"><p>文章标题</p></div>
+			<div class="content">
+				<p>文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容
+				文章内容文章内容文章内容文章内容文章内容文章内容文章内容
+				文章内容文章内容文章内容文章内容文章内容文章内容</p>
+			</div>
+			<div class="item-bottom">
+				<div class="bottom-info">
+					<p>
+						时间<span>2017-06-17 11:11:11</span>点击数：<span>15</span>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="list-item">
+			<div class="title"><p>文章标题</p></div>
+			<div class="content">
+				<p>文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容
+				文章内容文章内容文章内容文章内容文章内容文章内容文章内容
+				文章内容文章内容文章内容文章内容文章内容文章内容</p>
+			</div>
+			<div class="item-bottom">
+				<div class="bottom-info">
+					<p>
+						时间<span>2017-06-17 11:11:11</span>点击数：<span>15</span>
+					</p>
+				</div>
+			</div>
+		</div>
+		<div class="list-item">
+			<div class="title"><p>文章标题</p></div>
+			<div class="content">
+				<p>文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容
+				文章内容文章内容文章内容文章内容文章内容文章内容文章内容
+				文章内容文章内容文章内容文章内容文章内容文章内容</p>
+			</div>
+			<div class="item-bottom">
+				<div class="bottom-info">
+					<p>
+						时间<span>2017-06-17 11:11:11</span>点击数：<span>15</span>
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- 主体 end-->
+	<!-- 底部 -->
+	<include file="Public/footer" />
+	<!-- 底部end -->
+</body>
+
+<script>
+
+	var page = 1;
+	var ajaxini = true;
+	var cate_id = '';
+	$(document).ready(function(){
+		$('.cate-select').change(function(){
+			ajaxini = true;
+			cate_id = $(this).val()
+			page = 1;
+			getlsit()
+			
+		})
+		getlsit();
+		
+		//页面下拉加载
+	    $(window).scroll(function () {
+	        var scrollTop = $(window).scrollTop();//滑动的距离
+	        var scrollHeight = $(document).height();//页面高度
+	        var windowHeight = $(window).height();//窗口高度
+	        if (scrollTop + windowHeight >= scrollHeight-10) {
+	        	getlsit();
+	        }
+	    });
+		
+	});
+	
+		
+    
+	//载入列表
+	function getlsit(){
+		if(ajaxini){
+			ajaxini = false;
+			$.ajax({
+				url:'{:U('Index/ajax_page')}',
+				data:{
+					page:page,
+					cate_id:cate_id
+				},
+				type:'post',
+				dataType:'json',
+				success:function(data){
+					if(data.code==200){
+						fillhtml(data.data);
+						page++;
+					}
+					
+				}
+			})
+		}
+	}
+	
+	function fillhtml(data){
+		if(data.length>0){
+			var str = '';
+			for(var i in data){
+				str+='<div class="list-item">';
+				str+='<div class="title"><a href="{:U("Article/detail")}?id='+data[i]['id']+'"><p>'+data[i]['title']+'</p></a></div>';
+				str+='<div class="content"><p>'+data[i]['content']+'......</p></div>';
+				str+='<div class="item-bottom">';
+				str+='<div class="bottom-info">';
+				str+='<p>发布日期: <span>'+data[i]['add_date']+'&nbsp;&nbsp;</span>点击数：<span>'+data[i]['click']+'</span></p>';
+				str+='</div></div></div>';
+			}
+			ajaxini = true;
+		}else{
+		
+			//空
+			var str = '<p class="nomore">没有了</p>';
+		}
+		
+		if(page==1){
+			//重载
+			$('.blog-list').html(str);
+		}else{
+			//添加
+			$('.blog-list').append(str);
+		}
+		
+	}
+</script>
+</html>

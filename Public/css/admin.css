@@ -1,0 +1,144 @@
+@CHARSET "UTF-8";
+
+	body{
+		background-color:#f1f1f1;
+	}
+
+	table{
+		border-collapse:collapse;
+	}	
+button{
+		cursor:pointer;
+	}
+	.clear :after {clear:both;content:'.';display:block;width: 0;height: 0;visibility:hidden;} 
+	div,ul,li,a,span,p,table,td,th,tr{
+		margin:0;
+		padding:0;
+	}
+	.clearfix:after {
+		     content: ".";
+		     display: block;
+		     height: 0;
+		     clear: both;
+		     visibility: hidden;
+		}
+	.header{
+		height:50px;
+		widht:100%;
+	}
+	.main{
+		width:100%
+	}
+	.main .left-menus{
+		width:200px;
+		float:left;
+	}
+	.left-menus ul a li{
+		list-style:none;
+		font-size:16px;
+		padding:5px 10px;
+		
+	}
+
+	.footer{
+		width:100%;
+	}
+
+	
+	
+	.edit-btn{
+		background-color: #1b8eec;
+    	color: #fff;
+		border: 0;
+		padding: 3px 7px;
+	}
+	.normal-btn{
+		background-color: #44ca72;
+	    color: #fff;
+		border: 0;
+		padding: 3px 7px;
+	}
+	.change-btn{
+		background-color: #efdb0f;
+		    color: #2d2d2d;
+		border: 0;
+		padding: 3px 7px;
+	}
+	.danger-btn{
+		background-color: #ec4b45;
+	    color: #fff;
+		border: 0;
+		padding: 3px 7px;
+	}
+	.main .main-content{
+		padding:10px 0;
+		margin-left:200px;
+		background-color:#fff;		
+	}
+	
+	.content-main{
+		width:96%;
+		margin:0 2%;
+	}
+	.content-main .list-table{
+		width:100%;
+		border-top:1px solid #eae2e2;
+		border-left:1px solid #eae2e2;
+	}
+	.content-main .list-table td,.content-main .list-table th{
+		border-right:1px solid #eae2e2;
+		border-bottom:1px solid #eae2e2;
+	}
+	.list-table td,.list-table th{
+		padding:5px;
+	}
+	.list-table td button{
+	    border: 0;
+    	padding: 3px 7px;
+		margin-left:5px;
+	}
+	
+	#pop-form-div{
+		position: fixed;
+	    top: 40%;
+	    left: 0px;
+	    right: 0;
+	    width: 300px;
+	    margin: auto;
+	    border: 5px solid #ddd;
+	    height: auto;
+	    background-color: #fff;
+	
+	}
+	#pop-form-div .item-div{
+	    padding: 10px;
+	}
+	#pop-form-div .item-div input{
+	    padding: 2px;
+	}
+	.main-content .article-eidit-div{
+		max-width:800px;
+		height:800px;
+	}
+	.pagination{
+		margin-top:10px;
+		text-align:center;
+	}
+	.pagination ul li{
+		display:inline-block;
+	}
+	.pagination  li a{
+		position: relative;
+	    float: left;
+	    padding: 6px 12px;
+	    margin-left: -1px;
+	    line-height: 1.42857143;
+	    color: #337ab7;
+	    text-decoration: none;
+	    background-color: #fff;
+	    border: 1px solid #ddd;
+	}
+	.pagination  li.active a{
+			color:#fff;
+		background-color:#4662ec;
+		}
