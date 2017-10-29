@@ -35,9 +35,9 @@
 <script type="text/javascript">
 var ajaxini = true;
 	$(document).ready(function(){
-		
+		var vurl = $('.verify').attr('src');
 		$('.verify').click(function(){
-			$(this).attr('src',$(this).attr('src')+'?'+Math.random());
+			$(this).attr('src',vurl+'?'+Math.random());
 		});
 		$('#login-bt').click(function(){
 			var username = $('input[name="username"]').val();
