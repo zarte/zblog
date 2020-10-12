@@ -3,86 +3,76 @@
 	<!-- 头部 -->
 	<header class="clear">
 		<div class="logo">
-		<a href="{:U('Index/index')}"><img src="/Public/images/img1.gif"></a>
+		<a href="{:U('Index/index')}"><img src="/Public/images/logo.png"></a>
 		</div>
-		<div class="search-div">
-			<div>
-				<select name="class" class='cate-select'>
-					<option value="">选择分类</option>
-					<volist  name="cate_list" id="vo"  key="k">
-					<option value="{$k}">{$vo}</option>
-					</volist>
-				</select>
-			</div>
+		<div class="top-nav">
+			<i class="icon iconfont">&#xe657;</i>
 		</div>
 	</header>
 	<!-- 头部end -->
 	
 	<!-- 主体 -->
-	<div class="blog-list">
-		<!--文章列表项 -->
-		<div class="list-item">
-			<div class="title"><p>文章标题</p></div>
-			<div class="content">
-				<p>文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容
-				文章内容文章内容文章内容文章内容文章内容文章内容文章内容
-				文章内容文章内容文章内容文章内容文章内容文章内容</p>
-			</div>
-			<div class="item-bottom">
-				<div class="bottom-info">
-					<p>
-						时间<span>2017-06-17 11:11:11</span>点击数：<span>15</span>
-					</p>
-				</div>
-			</div>
+	<div class="main-body">
+		<div class="mb-cate-nav">
+			<ul class="cate-list">
+				<volist  name="cate_list" id="vo"  key="k">
+					<li class="list-item" data-id="{$vo['id']}">{$vo['cate_name']}</li>
+				</volist>
+			</ul>
 		</div>
-		
-		<div class="list-item">
-			<div class="title"><p>文章标题</p></div>
-			<div class="content">
-				<p>文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容
-				文章内容文章内容文章内容文章内容文章内容文章内容文章内容
-				文章内容文章内容文章内容文章内容文章内容文章内容</p>
-			</div>
-			<div class="item-bottom">
-				<div class="bottom-info">
-					<p>
-						时间<span>2017-06-17 11:11:11</span>点击数：<span>15</span>
-					</p>
+		<div class="blog-list">
+			<!--文章列表项 -->
+			<volist  name="list" id="vo"  key="k">
+			<div class="list-item">
+				<div class="title"><a href="{:U("Article/detail")}?id={$vo['id']}"><p>{$vo['title']}</p></a></div>
+				<div class="content"><a href="{:U("Article/detail")}?id={$vo['id']}"><p>{$vo['content']}......</p></a></div>
+				<div class="item-bottom">
+					<div class="bottom-info">
+					<p><i class="icon iconfont">&#xe62d;</i><span>{$vo['add_date']}&nbsp;&nbsp;</span><i class="icon iconfont views">&#xe674;</i><span>{$vo['click']}</span></p>
+					</div>
+					<div class="see-detail">
+						<a  href="{:U("Article/detail")}?id={$vo['id']}" >阅读全文</a>
+					</div>
 				</div>
+
 			</div>
+			</volist>
 		</div>
-		<div class="list-item">
-			<div class="title"><p>文章标题</p></div>
-			<div class="content">
-				<p>文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容
-				文章内容文章内容文章内容文章内容文章内容文章内容文章内容
-				文章内容文章内容文章内容文章内容文章内容文章内容</p>
+		<div class="right-div">
+			<div class="div-item">
+				<h3>分类</h3>
+				<ul class="cate-list list-ul">
+					<volist  name="cate_list" id="vo"  key="k">
+						<li class="list-item" data-id="{$vo['id']}">{$vo['cate_name']}</li>
+					</volist>
+				</ul>
 			</div>
-			<div class="item-bottom">
-				<div class="bottom-info">
-					<p>
-						时间<span>2017-06-17 11:11:11</span>点击数：<span>15</span>
-					</p>
-				</div>
+			<div class="div-item">
+				<h3>标签</h3>
+				<ul class="tags-list list-ul">
+					<volist  name="tags_list" id="vo"  key="k">
+						<if condition="$tag == $vo['tag_id'] ">
+							<li class="list-item on" data-id="{$vo['tag_id']}">{$vo['tag_name']}</li>
+							<else />
+							<li class="list-item " data-id="{$vo['tag_id']}">{$vo['tag_name']}</li>
+						</if>
+					</volist>
+				</ul>
 			</div>
-		</div>
-		<div class="list-item">
-			<div class="title"><p>文章标题</p></div>
-			<div class="content">
-				<p>文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容文章内容
-				文章内容文章内容文章内容文章内容文章内容文章内容文章内容
-				文章内容文章内容文章内容文章内容文章内容文章内容</p>
-			</div>
-			<div class="item-bottom">
-				<div class="bottom-info">
-					<p>
-						时间<span>2017-06-17 11:11:11</span>点击数：<span>15</span>
-					</p>
-				</div>
-			</div>
+      <div class="div-item"  >
+        <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+        <!-- 方块 -->
+        <ins class="adsbygoogle"
+             style="display:inline-block;width:226px;height:256px"
+             data-ad-client="ca-pub-8243302754537187"
+             data-ad-slot="7303485158"></ins>
+        <script>
+          (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+      </div>
 		</div>
 	</div>
+
 	<!-- 主体 end-->
 	<!-- 底部 -->
 	<include file="Public/footer" />
@@ -91,18 +81,28 @@
 
 <script>
 
-	var page = 1;
+	var page = 2;
 	var ajaxini = true;
 	var cate_id = '';
+	var tag_id ='';
 	$(document).ready(function(){
-		$('.cate-select').change(function(){
+		$('.cate-list').on('click','li',function(){
+		    $(this).siblings().removeClass('on');
+		    $(this).addClass('on');
 			ajaxini = true;
-			cate_id = $(this).val()
+			cate_id = $(this).attr('data-id');
 			page = 1;
-			getlsit()
-			
-		})
-		getlsit();
+			getlsit();
+		});
+        $('.tags-list').on('click','li',function(){
+            $(this).siblings().removeClass('on');
+            $(this).addClass('on');
+            ajaxini = true;
+            tag_id = $(this).attr('data-id');
+            page = 1;
+            getlsit();
+        })
+		//getlsit();
 		
 		//页面下拉加载
 	    $(window).scroll(function () {
@@ -113,6 +113,14 @@
 	        	getlsit();
 	        }
 	    });
+	    $('.top-nav').click(function (e) {
+	        if(!$('.mb-cate-nav').hasClass('on')){
+                $('.mb-cate-nav').addClass('on');
+			}else{
+                $('.mb-cate-nav').removeClass('on');
+			}
+
+        });
 		
 	});
 	
@@ -126,32 +134,38 @@
 				url:'{:U('Index/ajax_page')}',
 				data:{
 					page:page,
-					cate_id:cate_id
+					cate_id:cate_id,
+                    tag_id:tag_id
 				},
 				type:'post',
 				dataType:'json',
 				success:function(data){
 					if(data.code==200){
-						fillhtml(data.data);
-						page++;
+						if(data.data){
+							fillhtml(data.data);
+							page++;
+						}else{
+                            fillhtml(data.data);
+						}
 					}
-					
 				}
 			})
 		}
 	}
 	
 	function fillhtml(data){
-		if(data.length>0){
+		if(data && data.length>0){
 			var str = '';
 			for(var i in data){
 				str+='<div class="list-item">';
 				str+='<div class="title"><a href="{:U("Article/detail")}?id='+data[i]['id']+'"><p>'+data[i]['title']+'</p></a></div>';
-				str+='<div class="content"><p>'+data[i]['content']+'......</p></div>';
+				str+='<div class="content"><a href="{:U("Article/detail")}?id='+data[i]['id']+'"><p>'+data[i]['content']+'......</p></a></div>';
 				str+='<div class="item-bottom">';
 				str+='<div class="bottom-info">';
-				str+='<p>发布日期: <span>'+data[i]['add_date']+'&nbsp;&nbsp;</span>点击数：<span>'+data[i]['click']+'</span></p>';
-				str+='</div></div></div>';
+				str+='<p><i class="icon iconfont">&#xe62d;</i><span>'+data[i]['add_date']+'&nbsp;&nbsp;</span><i class="icon iconfont views">&#xe674;</i><span>'+data[i]['click']+'</span></p>';
+				str+='</div>';
+                str+='<div class="see-detail"><a  href="{:U("Article/detail")}?id='+data[i]['id']+'" >阅读全文</a></div>';
+                str+='</div></div>';
 			}
 			ajaxini = true;
 		}else{

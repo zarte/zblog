@@ -43,7 +43,11 @@ var ajaxini = true;
 			var username = $('input[name="username"]').val();
 			var password = $('input[name="passwd"]').val();
 			var verify = $('input[name="verify"]').val();
-			
+
+			var remember= false;
+			if($('input[name="remeber"]').is(':checked')){
+                remember= true;
+			}
 			if(username==''){
 				set_msg('用户名不能为空!');
 				return false;
@@ -65,7 +69,8 @@ var ajaxini = true;
 					data:{
 						username:username,
 						password:password,
-						verify:verify
+						verify:verify,
+                        remember:remember
 					},
 					type:'post',
 					dataType:'json',

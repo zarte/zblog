@@ -1,3 +1,35 @@
+<div id="goto-top-btn">
+	<i class="icon iconfont">&#xe600;</i>
+</div>
+<script>
+    $(document).ready(function() {
+        $(window).scroll(function(){
+
+            var containerIDhash ='#goto-top-btn';
+          var sd=$(window).scrollTop();
+            if(typeof document.body.style.maxHeight==="undefined"){
+                $(containerIDhash).css({'position':'absolute','top':sd+$(window).height()-50});
+            }
+            if(sd>200){
+                $(containerIDhash).fadeIn(400);
+			}else{
+                $(containerIDhash).fadeOut(400);
+			}
+        });
+
+        $('#goto-top-btn').on('click',function(){
+            $('html, body').animate({
+                    scrollTop:0
+                },
+                500,
+               'linear'
+            );
+            return false;
+        });
+
+    });
+</script>
 <footer>
-		<p>author:aloner Copyright © 1999-2017, xxx, All Rights Reserved  </p>
-	</footer>
+		<p>Copyright © 1999-2020&nbsp;HEYBUTTERFLY.COM All Rights Reserved</p>
+	<p><a href="/index.php/Home/Article/detail.html?id=9" style="color: #999999;">本站说明</a>&nbsp;|&nbsp;<a href="/sitemap.html" style="color: #999999;">站点地图</a>&nbsp;|&nbsp;Author:aloner&nbsp;|&nbsp;VERSION:1.2</p>
+</footer>

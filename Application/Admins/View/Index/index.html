@@ -1,14 +1,590 @@
 <include file="Public/header" />
 
-		<div class="main clear">
+		<div class="hby-main">
 			<include file="Public/menu" />
-			<div class="main-content">
-		
+
+			<div class="hby-main-content">
+		        <div class="hby-tab-div">
+					<ul>
+						<!--
+						<li class="active frame1-li" data-id="frame1">用户管理<i class="del">X</i></li>
+
+                    <li class="active frame1-li" data-id="frame1">用户管理<i class="del">X</i></li><li class="frame2-li " data-id="frame2">权限分配<i class="del">X</i></li><li class="frame3-li" data-id="frame3">商品管理<i class="del">X</i></li></ul>
+                	-->
+					</ul>
+                </div>
+				<!--
+                <div class="newframe" id="frame1">
+					<div class="content-main">
+						<table class="list-table">
+							<thead>
+							<tr><th></th><th>Id</th><th>标题</th><th>排序</th><th>操作</th>
+							</tr>
+							</thead>
+							<tbody id="list">
+							<tr>
+								<td>
+								</td>
+								<td>11</td>
+								<td>分类死</td>
+								<td>0</td>
+								<td><button class="edit-btn" data-id="11">编辑</button><button class="danger-btn" data-id="11">删除</button></td>
+							</tr><tr>
+								<td>
+								</td>
+								<td>10</td>
+								<td>分类散</td>
+								<td>0</td>
+								<td><button class="edit-btn" data-id="10">编辑</button><button class="danger-btn" data-id="10">删除</button></td>
+							</tr><tr>
+								<td>
+								</td>
+								<td>9</td>
+								<td>分类2</td>
+								<td>0</td>
+								<td><button class="edit-btn" data-id="9">编辑</button><button class="danger-btn" data-id="9">删除</button></td>
+							</tr><tr>
+								<td>
+								</td>
+								<td>8</td>
+								<td>分类一</td>
+								<td>0</td>
+								<td><button class="edit-btn" data-id="8">编辑</button><button class="danger-btn" data-id="8">删除</button></td>
+							</tr>						</tbody>
+						</table>
+					</div>
+					<div class="pagination">
+						<ul>
+							<li class="active"><a>1</a></li><li><a href="javascript:void(0);">2</a></li><li><a href="javascript:void(0);">3</a></li>
+						</ul>
+					</div>
+					<div>
+						<div style="width:1800px;background-color: #00a0e9;height: 800px;">测试</div>
+					</div>
+                </div>
+                -->
+
+
 			</div>
 		</div>
 		<include file="Public/footer" />
 </body>
 <script type="text/javascript">
+
+	/***弹窗***/
+	var HBYLayer={
+	    option:{
+	        curframe:'body',
+            curid:0,
+            layerarr:[],
+		},
+		layer:function (url,saveurl) {
+	        var $this =this;
+	        this.option.curid++;
+	        var curlayer = 'hbylayer'+this.option.curid;
+	        var parentframewidth = $(this.option.curframe).width();
+			var str = '<div class="hbylayer" id="'+curlayer+'"><div class="layertitle"><h2 >测试标题</h2><i class="icon iconfont close-btn close-layer">&#xe61a;</i></div><div class="layercontent"><div><input name="test" value="33"></div></div><div class="layerbottom"></div></div>';
+
+
+			$(this.option.curframe).append(str);
+			$('#'+curlayer+' .layertitle').mousedown(function(e){ //e鼠标事件
+
+                var offset = $(this).offset();//DIV在页面的位置
+                var x = e.pageX - offset.left;//获得鼠标指针离DIV元素左边界的距离
+                var y = e.pageY - offset.top;//获得鼠标指针离DIV元素上边界的距离
+                $(document).bind("mousemove",function(ev){ //绑定鼠标的移动事件，因为光标在DIV元素外面也要有效果，所以要用doucment的事件，而不用DIV元素的事件
+                    $('#'+curlayer).stop();//加上这个之后
+                    var _x = ev.pageX - x;//获得X轴方向移动的值
+                    var _y = ev.pageY - y;//获得Y轴方向移动的值
+                    $('#'+curlayer).animate({left:_x+"px",top:_y+"px"},5);
+                });
+            });
+
+            $(document).mouseup(function(){
+                $(this).unbind("mousemove");
+            });
+            var curlayerobj = $('#'+curlayer);
+			if(1){
+			    var confirmobj = $('<button class="btn-normal">确定</button>');
+                curlayerobj.find('.layerbottom').append(confirmobj);
+                var cancelobj = $('<button class="btn-default">取消</button>');
+                curlayerobj.find('.layerbottom').append(cancelobj);
+                confirmobj.click(function (e) {
+					e.preventDefault();
+					if(!$this.formcheck(curlayerobj.find('.hbyform'))){
+					    console.log(22);
+					    return;
+					}
+					$.ajax({
+						url:saveurl,
+						type:'post',
+						dataType:'json',
+						data:curlayerobj.find('.hbyform').serialize(),
+						success:function (res) {
+							if(res.code==200){
+                                curlayerobj.remove();
+                                $this.layer_shade('remove');
+                                HBYLayer.tip('保存成功!',1);
+                                console.log(CCui.data.currentfarmeid);
+                                $('#frame'+CCui.data.currentfarmeid).find('.reload-btn').click();
+							}else{
+							    if(typeof (res.msg)=="undefined"){
+                                    HBYLayer.alert("失败");
+								}else{
+                                    HBYLayer.alert(res.msg);
+								}
+
+							}
+                        },
+						error:function (res) {
+							console.log('layersave error!code:000003');
+                        }
+					})
+
+                });
+                cancelobj.click(function (e) {
+                    var rootobj = $(this).parent().parent().parent();
+                    $(this).parent().parent().remove();
+                    if(rootobj.find('.hbylayer').length>0){
+                        console.log('不光不');
+                    }else{
+                        HBYLayer.layer_shade("remove");
+
+                        console.log('关闭则找');
+                    }
+                })
+			}
+			$.ajax({
+				url:url,
+				type:'get',
+				success:function (res) {
+                    curlayerobj.find('.layercontent').html(res);
+                    $this.layer_shade();
+
+                    curlayerobj.css('left',parseInt((parentframewidth-curlayerobj.width())/2)+'px');
+                },
+				error:function (res) {
+					console.log('layerload error! code:000002')
+                }
+			})
+        },
+		alert:function (msg) {
+	        var $this = this;
+            this.option.curid++;
+            var curlayer = 'hbylayer'+this.option.curid;
+            var parentframewidth = $(this.option.curframe).width();
+            var str = '<div class="hbylayer" id="'+curlayer+'"><div class="layertitle"><h2 >提示</h2><i class="close-btn close-layer">X</i></div><div class="layercontent">'+msg+'</div><div class="layerbottom"></div></div>';
+
+            $(this.option.curframe).append(str);
+            var curlayerobj = $('#'+curlayer);
+            if(1){
+                var confirmobj = $('<button class="btn-default">确定</button>');
+                curlayerobj.find('.layerbottom').append(confirmobj);
+                confirmobj.click(function (e) {
+                    e.preventDefault();
+                    curlayerobj.remove();
+                    $this.option.curid--;
+                });
+            }
+            curlayerobj.css('left',parseInt((parentframewidth-curlayerobj.width())/2)+'px');
+        },
+		tip:function (msg,time) {
+	        var tipobj = $('<div class="hbytips"><div class="tips-title"><h2 >提示</h2></div><div class="tips-content"></div></div>');
+            $(this.option.curframe).append(tipobj);
+            tipobj.find('.tips-content').html(msg);
+            if(!time){
+                time = 3000;
+			}else{
+                time = time*1000;
+			}
+            setTimeout(function () {
+               tipobj.remove();
+            },time)
+        },
+		confirm:function (url,id,msg) {
+            if(typeof(id)=='undefined' || id=='' || id==0){
+                return
+            }
+            var $this =this;
+            this.option.curid++;
+            var curlayer = 'hbyconfirm'+this.option.curid;
+            var parentframewidth = $(this.option.curframe).width();
+            var str = '<div class="hbyconfirm" id="'+curlayer+'"><div class="hbyconfirmcontent"><div><input name="test" value="33"></div></div><div class="hbyconfirmbottom"></div></div>';
+
+            $(this.option.curframe).append(str);
+            var curlayerobj = $('#'+curlayer);
+            if(1){
+                var confirmobj = $('<button class="btn-normal">确定</button>');
+                curlayerobj.find('.hbyconfirmbottom').append(confirmobj);
+                var cancelobj = $('<button class="btn-default">取消</button>');
+                curlayerobj.find('.hbyconfirmbottom').append(cancelobj);
+                confirmobj.click(function (e) {
+                    e.preventDefault();
+                    $.ajax({
+                        url:url,
+                        type:'get',
+                        dataType:'json',
+                        success:function (res) {
+                            if(res.code==200){
+                                curlayerobj.remove();
+                                $this.layer_shade('remove');
+                                HBYLayer.tip('修改成功!',1);
+                                console.log(CCui.data.currentfarmeid);
+                                $('#frame'+CCui.data.currentfarmeid).find('.reload-btn').click();
+                            }else{
+                                HBYLayer.alert(res.msg);
+                            }
+                        },
+                        error:function (res) {
+                            console.log('layersave error!code:000005');
+                        }
+                    })
+
+                });
+                cancelobj.click(function (e) {
+                    var rootobj = $(this).parent().parent().parent();
+                    $(this).parent().parent().remove();
+                    if(rootobj.find('.hbylayer').length>0){
+                        console.log('不光不');
+                    }else{
+                        HBYLayer.layer_shade("remove");
+
+                        console.log('关闭则找');
+                    }
+                })
+            }
+            if(typeof(msg)=='undefined' || msg==''){
+                msg='<i class="icon iconfont arrow">&#xe6aa;</i>确认要删除'+id+'吗？'
+			}
+            curlayerobj.find('.hbyconfirmcontent').html(msg);
+            $this.layer_shade();
+
+            curlayerobj.css('left',parseInt((parentframewidth-curlayerobj.width())/2)+'px');
+        },
+		layer_shade:function (op) {
+	        if(op=="remove"){
+	            console.log('remove');
+                if($(this.option.curframe).find('.layer_shade').length>0){
+                    $(this.option.curframe).find('.layer_shade').remove();
+                }
+			}else{
+                if($(this.option.curframe).find('.layer_shade').length<=0){
+                    $(this.option.curframe).append('<div class="layer_shade"></div>')
+                }
+			}
+
+    	},
+		layer_load:function (op) {
+            if(op=="remove"){
+                console.log('remove');
+                if($(this.option.curframe).find('.layer_load').length>0){
+                    $(this.option.curframe).find('.layer_load').remove();
+                }
+            }else{
+                if($(this.option.curframe).find('.layer_load').length<=0){
+                    $(this.option.curframe).append('<div class="layer_load"><i class="icon iconfont">&#xe699;</i></div>')
+                }
+            }
+        },
+		formcheck:function (formobj) {
+	        var flag = true;
+            formobj.find('.hbyform-input').each(function (e,o) {
+				if($(this).attr('hbyrequire')=="require"){
+				    console.log($(this).val());
+                    console.log(typeof($(this).val()));
+				    if(typeof($(this).val())=="undefined"||$(this).val()==""){
+                        $(this).focus();
+                        flag = false;
+                        return;
+					}
+				}
+            });
+			return flag;
+        },
+	};
+
+	var HBYPageobj ={
+	    option:{
+	        curframe:'',
+            loadpagefun:'',
+			geturl:'',
+			total:0,
+			pagenum:5,//每页个数0代表无分页
+			num:8//必须为双数
+		},
+		//设定参数
+	    render:function (option) {
+	        console.log(option);
+			this.option.loadpagefun = option.loadpagefun;
+            this.option.geturl = option.geturl;
+            this.option.total = option.total;
+            this.option.pagenum = option.pagenum;
+        },
+		creater:function () {
+            var $this = this;
+	        if(this.option.pagenum==0){
+                var url = this.option.geturl;
+                var pagefun = function () {
+                    $.ajax({
+                        url: url,
+                        type: 'get',
+                        success: function (data) {
+                            $(HBYPageobj.option.curframe).html(data);
+                            HBYPageobj.creater()
+                        },
+                    });
+                };
+                $this.bindcurreloadbtn(url,0,pagefun);
+
+			}else{
+                var pageulobj = $('<ul></ul>');
+                var pagefun = this.option.loadpagefun;
+                var url = this.option.geturl;
+                var total =  Math.ceil(this.option.total/this.option.pagenum);
+
+                var halfnum = $this.option.num/2;
+                pageulobj.on('click','a',function (e) {
+                    e.preventDefault();
+                    if(!$(this).parent().hasClass('active')){
+                        //刷新分页
+                        pageulobj.html('');
+                        var cur = parseInt($(this).text());
+                        $this.getpagestr(pageulobj,cur,halfnum,total);
+                        var getdata = '';
+                        if($($this.option.curframe+' .hbysearch-form').length>0){
+                            getdata= $($this.option.curframe+' .hbysearch-form').serialize();
+                        }
+                        $.ajax({
+                            url:url,
+                            type:'post',
+                            dataType:'json',
+                            data:getdata+'&p='+cur,
+                            success:function (res) {
+                                $($this.option.curframe+' .hbypage-listemple').html(pagefun(res));
+                                $this.bindcurreloadbtn(url,cur,pagefun);
+                            },
+                            error:function () {
+                                console.log('pageload error code:0000001');
+                            }
+                        })
+                    }
+                });
+                $(this.option.curframe+' .pagination').append(pageulobj);
+                $this.getpagestr(pageulobj,1,halfnum,total);
+                console.log(url);
+                $this.bindcurreloadbtn(url,1,pagefun);
+			}
+
+        },
+		getpagestr:function (pageulobj,cur,halfnum,total) {
+            $pagelist = '';
+            var endpage;
+            var lessnum =0;
+            if(cur-halfnum >0 ){
+                endpage=cur-halfnum;
+            }else{
+                lessnum = halfnum-cur+1;
+                endpage=1;
+            }
+            for(var i = cur-1;i>=endpage;i--){
+                $pagelist ='<li><a href="javascript:void(0);">'+i+'</a></li>'+$pagelist;
+            }
+            $pagelist +='<li class="active"><a>'+cur+'</a>';
+            halfnum +=lessnum;
+            var endpage = cur+halfnum >total ?total:cur+halfnum;
+            for(var i=cur+1;i<=endpage;i++){
+                $pagelist +='<li><a href="javascript:void(0);">'+i+'</a></li>';
+            }
+            pageulobj.append($pagelist);
+        },
+		bindcurreloadbtn:function(url,cur,pagefun){
+	        var $this= this;
+	        if(cur==0){
+                $(this.option.curframe+' .reload-btn').off().on('click',function (e) {
+                    HBYLayer.layer_load();
+                    pagefun();
+                    HBYLayer.layer_load('remove');
+                });
+			}else{
+                $(this.option.curframe+' .reload-btn').off().on('click',function (e) {
+                    HBYLayer.layer_load();
+                    $.ajax({
+                        url:url,
+                        type:'post',
+                        dataType:'json',
+                        data:'?&p='+cur,
+                        success:function (res) {
+                            $($this.option.curframe+' .hbypage-listemple').html(pagefun(res));
+                        },
+                        error:function () {
+                            console.log('reload error code:0000004');
+                        },
+                        complete:function () {
+                            HBYLayer.layer_load('remove');
+                        }
+                    })
+                });
+			}
+
+
+		}
+
+	};
+	var CCui ={
+	    fobj:{
+	       menu:'.left-menus',
+           mainframe:'.hby-main-content',
+			tabdiv:'.hby-tab-div'
+        },
+	    setting:{
+
+        },
+        data:{
+			currentfarmeid:0
+        },
+	    init:function () {
+            this.binddom();
+            this.Leftmenus();
+            this.Tablist();
+            $('#frameinit').click();
+        },
+        Leftmenus:function () {
+	        $this = this;
+	        //二级目录
+            $(this.fobj.menu).on('click','a',function (e) {
+                e.preventDefault();
+                if($(this).next('.second-menus').length>0){
+                    if($(this).next('.second-menus').hasClass('on')){
+                        $(this).children('.arrow').html("&#xe6aa;");
+                        $(this).next('.second-menus').removeClass('on');
+                    }else{
+                        $(this).children('.arrow').html("&#xe6b0;");
+                        $(this).next('.second-menus').addClass('on');
+                    }
+                }else{
+                    //loadpage
+                    $this.loadtabpage($(this).attr('data-url'),$(this).attr('data-id'),$(this).text());
+
+                }
+                //颜色修改
+                if($(this).parent().parent().hasClass('second-menus')){
+                    $(this).parent().parent().parent().siblings('li').find('a').removeClass('on');
+                    $(this).parent().siblings('li').find('a').removeClass('on');
+				}else{
+                    $(this).parent().siblings('li').find('a').removeClass('on');
+				}
+
+                $(this).addClass('on');
+                return false;
+            });
+        },
+		Tablist:function () {
+	        var $this = this;
+            $(this.fobj.tabdiv).on('click','li',function (e) {
+				if(!$($this).hasClass('active')){
+				    $('.newframe').hide();
+                    $('#'+$(this).attr('data-id')).show();
+                    $($this.fobj.tabdiv).find('li').removeClass('active');
+                    $(this).addClass('active');
+                    HBYPageobj.option.curframe='#'+$(this).attr('data-id');
+                    CCui.data.currentfarmeid = $(this).attr('data-id').substring(5);
+				}
+            });
+            $(this.fobj.tabdiv).on('click','.del',function (e) {
+                e.preventDefault();
+				var frame = $(this).parent().attr('data-id');
+                $(this).parent().remove();
+				$('#'+frame).remove();
+				return false;
+            });
+        },
+        binddom:function () {
+	        //弹窗关闭按钮
+            $('body').on('click','.close-layer',function () {
+                var rootobj = $(this).parent().parent().parent();
+                $(this).parent().parent().remove();
+                if(rootobj.find('.hbylayer').length>0){
+                    console.log('不光不');
+                }else{
+                    HBYLayer.layer_shade("remove");
+                    console.log('关闭则找');
+                }
+
+            });
+
+
+            $('.userinfo .opera').on('click',function (e) {
+                e.preventDefault();
+                console.log($(this).parent().css('width'));
+                $(this).parent().append('<div class="dropbox operabox" ><span></span><ul><a href="{:U('Login/logout')}"><li>退出</li></a></ul></div>');
+            });
+            $('.userinfo').hover('',function () {
+                $('.operabox').remove();
+            });
+
+            //通用按钮绑定
+			$('body').on('click','.edit-btn',function (e) {
+                e.preventDefault();
+                if (typeof($(this).attr('data-url'))!="undefined") {
+                    HBYLayer.layer($(this).attr('data-url'),$(this).attr('data-saveurl'));
+                }
+            });
+            $('body').on('click','.del-btn',function (e) {
+                e.preventDefault();
+                if (typeof($(this).attr('data-url'))!="undefined") {
+                    HBYLayer.confirm($(this).attr('data-url'),$(this).attr('data-id'));
+                }
+            });
+
+            $('body').on('click','.change-btn',function (e) {
+                e.preventDefault();
+                if (typeof($(this).attr('data-url'))!="undefined") {
+                    HBYLayer.confirm($(this).attr('data-url'),$(this).attr('data-id'),'确定要修改'+$(this).attr('data-id')+'吗?');
+                }
+            });
+
+
+        },
+        loadtabpage:function (url,menuid,title) {
+	        $this = this;
+	        var frame = $('#frame'+menuid);
+			this.data.currentfarmeid=menuid;
+	        if(frame.length>0){
+                $($this.fobj.tabdiv).find('li').removeClass('active');
+                $('.frame'+menuid+'-li').addClass('active');
+	            $('.newframe').hide();
+                $('#frame'+menuid).show();
+                CCui.data.currentfarmeid = menuid;
+			}else{
+                if(url){
+                    $($this.fobj.tabdiv).find('li').removeClass('active');
+                    $($this.fobj.tabdiv).children('ul').append('<li class="active frame'+menuid+'-li" data-id="frame'+menuid+'">'+title+'<i class="icon iconfont del">&#xe61a;</i></li>');
+                    $('.newframe').hide();
+                    $(this.fobj.mainframe).append('<div class="newframe" id="frame'+menuid+'" >');
+                    CCui.data.currentfarmeid = menuid;
+                    $.ajax({
+                        url:url,
+                        type:'get',
+                        success:function (data) {
+                            $('#frame'+menuid).html(data);
+                            HBYPageobj.option.curframe='#frame'+menuid;
+                            HBYPageobj.creater()
+                        },
+                        error:function () {
+                            console.log('code00001');
+                        }
+                    })
+                }else{
+                    console.log('no url');
+                }
+			}
+
+        }
+    }
+    var app = CCui;
+    app.init();
+
+
 
 </script>
 </html>

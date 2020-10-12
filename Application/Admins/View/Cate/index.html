@@ -1,10 +1,8 @@
-<include file="Public/header" />
 
-		<div class="main clearfix">
-			<include file="Public/menu" />
 			<div class="main-content">
 				<div>
-					<a><button class="edit-btn add-cate" >添加</button></a>
+					<button  data-url="{:U('Cate/add')}" data-saveurl="{:U('Cate/save')}" class="edit-btn" >添加</button>
+					<button  class="btn-normal reload-btn" ><i class="icon iconfont">&#xe61d;</i>刷新</button>
 				</div>
 				<div class="content-main">
 					<table class="list-table">
@@ -12,7 +10,7 @@
 							<tr><th></th><th>Id</th><th>标题</th><th>排序</th><th>操作</th>
 							</tr>
 						</thead>
-						<tbody id="list">
+						<tbody class="hbypage-listemple catelist">
 						 <volist  name="list" id="vo" >
 							<tr>
 								<td>
@@ -20,19 +18,16 @@
 								<td>{$vo.id}</td>
 								<td>{$vo.cate_name}</td>
 								<td>{$vo.order}</td>
-								<td><button class="edit-btn" data-id="{$vo.id}">编辑</button><button class="danger-btn" data-id="{$vo.id}">删除</button></td>
+								<td><button class="edit-btn btn-normal"  data-url="{:U('Cate/edit')}?id={$vo.id}" data-saveurl="{:U('Cate/save')}" >编辑</button><button class="btn-danger del-btn" data-id="{$vo.id}" data-url="{:U('Cate/del')}?id={$vo.id}">删除</button></td>
 							</tr>
 							</volist>
 						</tbody>
 					</table>
 				</div>
-				 <div class="pagination pagination-centered">
-                {$page}
+				 <div class="pagination ">
+
             	</div>
 			</div>
-		</div>
-		<include file="Public/footer" />
-		
 		<div id="pop-form-div" class="disn">
 			<form>
 				<input type="hidden" name="id" value="">
@@ -48,120 +43,32 @@
 				</div>
 			</form>
 		</div>
-</body>
+
 <script type="text/javascript">
 	var ajaxini = true;
-	$('.add-cate').on('click',function(){
-		$('#pop-form-div').find('input').val('');
-		$('#pop-form-div').show();
-	});
-	$('#pop-form-div').on('click','.edit-btn',function(){
-		$('#pop-form-div').hide();
-		return false;
-	});
-	$('#pop-form-div').on('click','.normal-btn',function(){
-		var cate_name = $('input[name="cate_name"]').val();
-		var order = $('input[name="order"]').val();
-		var id = $('input[name="id"]').val();
-		if(!cate_name){
-			alert('分类名不能为空');
-			return false;
-		}
-		if(ajaxini){
-			
-			ajaxini = false;
-			$.ajax({
-				url:'{:U('Cate/save')}',
-				data:{
-					id:id,
-					cate_name:cate_name,
-					order:order
-				},
-				type:'post',
-				dataType:'json',
-				success:function(data){
-					if(data.code==200){
-						 window.location.reload();
-					}else{
-						alert(data.msg);
-					}
-					ajaxini = true;
+    HBYPageobj.render({
+        loadpagefun:function (res) {
+            var str = '';
+			if(res.code==200){
+				for(var i in res.list){
+                    str+='<tr>';
+                    str+='<td>';
+                    str+='<td>'+res.list[i]['id']+'</td>';
+                    str+='<td>'+res.list[i]['cate_name']+'</td>';
+                    str+='<td>'+res.list[i]['order']+'</td>';
+                    str+='<td><button class="edit-btn btn-normal"  data-url="{:U('Cate/edit')}?id='+res.list[i]['id']+'" data-saveurl="{:U('Cate/save')}" >编辑</button><button class="btn-danger del-btn" data-id="'+res.list[i]['id']+'"  data-url="{:U('Cate/del')}?id='+res.list[i]['id']+'">删除</button></td> </tr>';
 				}
-			});
-		}
-		return false;
-	})
-	
-	$('#list').on('click','.edit-btn',function(){
-		var id = $(this).attr('data-id');
-		$.ajax({
-			url:'{:U('Cate/edit')}',
-			data:{
-				id:id
-			},
-			type:'post',
-			dataType:'json',
-			success:function(data){
-				if(data.code==200){
-					$('input[name="cate_name"]').val(data.data['cate_name']);
-					$('input[name="order"]').val(data.data['order']);
-					$('input[name="id"]').val(data.data['id']);
-					$('#pop-form-div').show();
-				}else{
-					alert(data.msg);
-				}
-				
 			}
-		});
+            return str;
+        },
+        geturl:"{:U('Cate/index')}",
+		total:"{$pagenation['total']}",
+		pagenum:"{$pagenation['page_num']}"
 	});
-	
-	$('#list').on('click','.danger-btn',function(){
-		var id = $(this).attr('data-id');
-		$.ajax({
-			url:'{:U('Cate/del')}',
-			data:{
-				id:id
-			},
-			type:'post',
-			dataType:'json',
-			success:function(data){
-				if(data.code==200){
-					 window.location.reload();
-				}else{
-					alert(data.msg);
-				}
-				
-			}
-		});
-	});
-	
-	$('.pagination').on('click','a',function(){
-		if($(this).attr('data-url')){
-			$.ajax({
-				url:$(this).attr('data-url'),
-				type:'post',
-				data:{
-					flag:'tt'
-				},
-				dataType:'json',
-				success:function(data){
-					if(data.list){
-						var str = '';
-						for(var i in data.list){
-							str+='<tr><td></td>';
-							str+='<td>'+data.list[i]['id']+'</td>';
-							str+='<td>'+data.list[i]['cate_name']+'</td>';
-							str+='<td>'+data.list[i]['order']+'</td>';
-							str+='<td><button class="edit-btn" data-id="'+data.list[i]['id']+'">编辑</button><button class="danger-btn" data-id="'+data.list[i]['id']+'">删除</button></td></tr>';
-						
-						}
-						 $('#list').html(str);
-						 $('.pagination').html(data.page);
-					}
-				}
-			});
-		}
-	})
+
+
+
+
+
 
 </script>
-</html>

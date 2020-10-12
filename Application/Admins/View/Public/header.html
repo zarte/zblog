@@ -1,10 +1,9 @@
 <!DOCTYPE>
 <html>
 <head>
-<title>首页</title>
+<title>HBYblog后台管理系统</title>
 <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
 <link href="/Public/css/common.css" rel="stylesheet">
-<link href="/Public/css/style.css" rel="stylesheet">
 <link href="/Public/css/admin.css" rel="stylesheet">
 <script type="text/javascript" src="/Public/js/jquery.min.js" ></script>
 </head>
@@ -13,4 +12,15 @@
 </style>
 <body >
 		<div class="header">
+			<ul class="header-right hby-nav">
+
+				<!--
+				<li class="nav-item">
+					<span>测试</span>
+				</li>
+				-->
+				<li class="nav-item userinfo" >
+					<i class="icon iconfont">&#xe65c;</i><span>{$userinfo['user_name']}</span>&nbsp;&nbsp;<i class="icon iconfont opera">&#xe6aa;</i>
+				</li>
+			</ul>
 		</div>

@@ -38,7 +38,7 @@ class CommentController extends Controller {
         }
         
         if($email){
-            $reg = '/^([0-9A-Za-z_\-]+)@[0-9a-z]+\.[a-z]{2,3}$/';
+            $reg = '/^([0-9A-Za-z_\.\-]+)@[0-9a-z]+\.[a-z]{2,3}$/';
             if(!preg_match($reg,$email)){
                 echo '{"code":4,"msg":"邮箱格式不符"}';
                 exit();
@@ -95,9 +95,11 @@ class CommentController extends Controller {
             
             $child_arr = array();
             foreach ($clist as $kk=>$vv){
+                $vv['gavatar']=$this->getavatar($vv['email']);
                 $child_arr[$vv['pid']][] = $vv;
             }
             foreach ($list as $k=>$v){
+                $list[$k]['gavatar'] =$this->getavatar($v['email']);
                if($child_arr[$v['id']]){
                    $list[$k]['children']=$child_arr[$v['id']];
                }
@@ -128,5 +130,14 @@ class CommentController extends Controller {
       
         echo json_encode(array('code'=>200,'data'=>$list));
     }
-    
+
+    private function getavatar($email){
+       $default = "http://cn.gravatar.com/avatar/b84fae8f33812643b6f3543253c961f8";
+
+        $size = 80;
+        $grav_url = "https://cn.gravatar.com/avatar/" . md5( strtolower( trim( $email ) ) ) . "?d=" . urlencode( $default ) . "&s=" . $size;
+
+        return $grav_url;
+    }
+
 }

@@ -13,8 +13,6 @@ File Encoding         : 65001
 Date: 2017-10-05 20:41:41
 */
 
-SET FOREIGN_KEY_CHECKS=0;
-
 -- ----------------------------
 -- Table structure for blog_article
 -- ----------------------------
@@ -29,8 +27,23 @@ CREATE TABLE `blog_article` (
   `update_date` datetime DEFAULT NULL,
   `click` int(11) NOT NULL DEFAULT '0',
   `cate_id` int(11) DEFAULT '1',
+  `show` tinyint(1) NOT NULL DEFAULT '1' COMMENT '1显示0不显示',
+  `status` tinyint(1) NOT NULL DEFAULT '1' COMMENT '0删除',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for blog_articletags
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_articletags`;
+CREATE TABLE `blog_articletags` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `art_id` int(11) NOT NULL,
+  `tag_id` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `tag_id` (`tag_id`),
+  KEY `art_id` (`art_id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for blog_cate
@@ -42,7 +55,7 @@ CREATE TABLE `blog_cate` (
   `status` tinyint(4) NOT NULL DEFAULT '0',
   `order` tinyint(255) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for blog_comment
@@ -57,7 +70,18 @@ CREATE TABLE `blog_comment` (
   `add_time` datetime DEFAULT NULL,
   `email` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=21 DEFAULT CHARSET=utf8 COMMENT='评论表';
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8 COMMENT='评论表';
+
+-- ----------------------------
+-- Table structure for blog_tags
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_tags`;
+CREATE TABLE `blog_tags` (
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  `tag_name` varchar(32) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `tag_name` (`tag_name`) USING BTREE
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
 
 -- ----------------------------
 -- Table structure for blog_user
@@ -68,4 +92,19 @@ CREATE TABLE `blog_user` (
   `user_name` varchar(255) DEFAULT NULL,
   `passwd` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+-- ----------------------------
+-- Table structure for blog_web
+-- ----------------------------
+DROP TABLE IF EXISTS `blog_web`;
+CREATE TABLE `blog_web` (
+  `web_name` varchar(255) DEFAULT NULL,
+  `web_status` tinyint(4) DEFAULT '1',
+  `web_desc` varchar(255) DEFAULT NULL,
+  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=1 DEFAULT CHARSET=utf8;
+
+ALTER TABLE `blog_article` ADD fcontent text COMMENT '格式化后的内容';
+ALTER TABLE `blog_article` ADD summarize varchar(512) COMMENT '文章概述';

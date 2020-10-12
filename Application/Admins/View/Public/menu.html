@@ -1,8 +1,29 @@
-
-			<div class="left-menus">
-				<ul>
-					<a href="{:U('Article/index')}"><li>文章列表</li></a>
-					<a href="{:U('Cate/index')}"><li>分类列表</li></a>
-					<a href="{:U('Comment/index')}"><li>评论列表</li></a>
-				</ul>
-			</div>
+<div class="left-menus">
+	<ul>
+		<li>
+			<a >系统管理<i class="icon iconfont arrow">&#xe6aa;</i></a>
+			<ul class="second-menus">
+				<li><a data-url="{:U('Index/setting')}" data-id="1" id="frameinit">站点设置</a></li>
+				<li><a data-url="{:U('Index/system')}" data-id="2">系统状态</a></li>
+			</ul>
+		</li>
+		<li>
+			<a >内容管理<i class="icon iconfont arrow">&#xe6aa;</i></a>
+			<ul class="second-menus">
+				<li><a data-url="{:U('Article/index')}" data-id="3">文章列表</a></li>
+				<li><a data-url="{:U('Cate/index')}" data-id="4">分类列表</a></li>
+				<li><a data-url="{:U('Comment/index')}" data-id="5">评论列表</a></li>
+				<li><a data-url="{:U('Article/tagslist')}" data-id="6">标签</a></li>
+			</ul>
+		</li>
+		<!--
+		<li>
+			<a >待定<i class="icon iconfont arrow">&#xe6aa;</i></a>
+			<ul class="second-menus">
+				<li><a>子类一</a></li>
+				<li><a>子类二</a></li>
+			</ul>
+		</li>
+		-->
+	</ul>
+</div>

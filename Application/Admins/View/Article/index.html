@@ -1,18 +1,18 @@
-<include file="Public/header" />
 
-		<div class="main clearfix">
-			<include file="Public/menu" />
 			<div class="main-content">
-				<div>
-					<a href="{:U('Article/add')}"><button class="edit-btn" >添加</button></a>
+				<div class="hbyframe-operadiv">
+					<div class="">
+						<button  data-url="{:U('Article/add')}" data-saveurl="{:U('Article/save')}" class="edit-btn" >添加</button>
+						<button  class="btn-normal reload-btn" ><i class="icon iconfont">&#xe61d;</i>刷新</button>
+					</div>
 				</div>
 				<div class="content-main">
 					<table class="list-table">
 						<thead>
-							<tr><th></th><th>Id</th><th>标题</th><th>分类</th><th>添加时间</th><th>修改时间</th><th>操作</th>
+							<tr><th></th><th>Id</th><th style="width:200px">标题</th><th>分类</th><th>添加时间</th><th>修改时间</th><th>操作</th>
 							</tr>
 						</thead>
-						<tbody id="list">
+						<tbody class="hbypage-listemple">
 						 <volist  name="list" id="vo" >
 							<tr>
 								<td>
@@ -22,72 +22,69 @@
 								<td>{$vo.cate_name}</td>
 								<td>{$vo.add_date}</td>
 								<td>{$vo.update_date}</td>
-								<td><button class="edit-btn" data-id="{$vo.id}">编辑</button><button class="danger-btn" data-id="{$vo.id}">删除</button></td>
+								<td><button class="edit-btn btn-normal"  data-url="{:U('Article/edit')}?id={$vo.id}" data-saveurl="{:U('Article/save')}">编辑</button>
+									<if condition="$vo['show'] eq 1">
+										<button class="btn-warm change-btn" data-id="{$vo.id}" data-url="{:U('Article/show')}?id={$vo.id}&show=0">隐藏</button>
+									<else />
+										<button class="btn-default change-btn" data-id="{$vo.id}" data-url="{:U('Article/show')}?id={$vo.id}&show=1">显示</button>
+									</if>
+									<button class="btn-danger del-btn" data-id="{$vo.id}" data-url="{:U('Article/del')}?id={$vo.id}">删除</button></td>
 							</tr>
 							</volist>
 						</tbody>
 					</table>
 				</div>
-				 <div class="pagination pagination-centered">
-                {$page}
+				 <div class="pagination">
+
             	</div>
 			</div>
-		</div>
-		<include file="Public/footer" />
-</body>
+
+
+<script type="text/javascript" src="/Public/plugin/hbyedit/js/marked.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
+<script src="/Public/plugin/hbyedit/js/hbymedit.js"></script>
 <script type="text/javascript">
+
+    HBYPageobj.render({
+        loadpagefun:function (res) {
+            var str = '';
+            if(res.code==200){
+                for(var i in res.list){
+                    str+='<tr><td></td>';
+                    str+='<td>'+res.list[i]['id']+'</td>';
+                    str+='<td>'+res.list[i]['title']+'</td>';
+                    str+='<td>'+res.list[i]['cate_name']+'</td>';
+                    str+='<td>'+res.list[i]['add_date']+'</td>';
+                    str+='<td>'+res.list[i]['update_date']+'</td>';
+                    str+='<td><button class="edit-btn btn-normal"  data-url="{:U('Article/edit')}?id='+res.list[i]['id']+'" data-saveurl="{:U('Article/save')}">编辑</button>';
+					if(res.list[i]['show']==1){
+					    str +='<button class="btn-warm change-btn" data-id="'+res.list[i]['id']+'" data-url="{:U('Article/show')}?id='+res.list[i]['id']+'&show=0">隐藏</button>';
+					}else{
+                        str+='<button class="btn-default change-btn" data-id="'+res.list[i]['id']+'" data-url="{:U('Article/show')}?id='+res.list[i]['id']+'&show=1">显示</button>';
+					}
+                    str+='<button class="btn-danger del-btn" data-id="'+res.list[i]['id']+'"  data-url="{:U('Article/del')}?id='+res.list[i]['id']+'">删除</button></td></tr>';
+				}
+            }
+            return str;
+        },
+        geturl:"{:U('Article/index')}",
+        total:"{$pagenation['total']}",
+        pagenum:"{$pagenation['page_num']}"
+    });
+
+
+    /*
 	$('#list').on('click','.edit-btn',function(){
 		window.location.href="{:U('Article/edit')}?id="+$(this).attr('data-id');
 	});
-	$('#list').on('click','.danger-btn',function(){
-		var id = $(this).attr('data-id');
-		$.ajax({
-			url:'{:U('Article/del')}',
-			data:{
-				id:id
-			},
-			type:'post',
-			dataType:'json',
-			success:function(data){
-				if(data.code==200){
-					 window.location.reload();
-				}else{
-					alert(data.msg);
-				}
-				
-			}
-		});
-	});
-	
-	$('.pagination').on('click','a',function(){
-		if($(this).attr('data-url')){
-			$.ajax({
-				url:$(this).attr('data-url'),
-				type:'post',
-				data:{
-					flag:'tt'
-				},
-				dataType:'json',
-				success:function(data){
-					if(data.list){
-						var str = '';
-						for(var i in data.list){
-							str+='<tr><td></td>';
-							str+='<td>'+data.list[i]['id']+'</td>';
-							str+='<td>'+data.list[i]['title']+'</td>';
-							str+='<td>'+data.list[i]['cate_name']+'</td>';
-							str+='<td>'+data.list[i]['add_date']+'</td>';
-							str+='<td>'+data.list[i]['update_date']+'</td>';
-							str+='<td><button class="edit-btn" data-id="'+data.list[i]['id']+'">编辑</button><button class="danger-btn" data-id="'+data.list[i]['id']+'">删除</button></td></tr>';
-						
-						}
-						 $('#list').html(str);
-						 $('.pagination').html(data.page);
-					}
-				}
-			});
-		}
-	})
+
+	$('.edit-btn').click(function () {
+		HBYLayer.layer($(this).attr('data-url'),$(this).attr('data-saveurl'));
+    });
+*/
+
+
+
+
 
 </script>
-</html>

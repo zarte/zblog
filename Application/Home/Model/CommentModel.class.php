@@ -25,7 +25,7 @@ class CommentModel extends Model{
         $sql .=' where '.$condition['where'];
         $sql .=' GROUP BY  comment1.pid,comment1.id HAVING count(comment1.id)<5';
         $sql .=' ORDER BY '.$condition['order'];
-       // echo $sql;exit;
+      // echo $sql;exit;
         $list=$this->query($sql);
        return $list;
     }

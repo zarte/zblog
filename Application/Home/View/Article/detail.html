@@ -1,24 +1,49 @@
 <include file="Public/header" />
 	<!-- 头部 -->
-	<header class="clear">
-		<div class="logo">
-		<a href="{:U('Index/index')}"><img src="/Public/images/img1.gif"></a>
-		</div>
-		
-	</header>
+<header class="clear">
+	<div class="logo">
+		<a href="{:U('Index/index')}"><img src="/Public/images/logo.png"></a>
+	</div>
+</header>
 	<!-- 头部end -->
 	
-	<div class="ibody">
-		<div class="article">
-			<div class="head  tc">
-				<p class="title">{$data['title']}</p>
-				<p class="author">作者：zarte 时间: {$data['add_date']|substr=0,11}</p>
-			</div>
-			<div >
-				{$data['content']}
-			</div>
+<div class="ibody">
+	<div class="article">
+		<div class="head">
+			<h1 class="title">{$data['title']}</h1>
+			<p class="author">作者：zarte&nbsp;&nbsp;&nbsp;&nbsp;发布时间: {$data['add_date']|substr=0,11}</p>
+			<notempty name="data['tagslist']">
+				<p class="tags-list">
+					<volist name="data['tagslist']" id="vo">
+						<span data-id="{$vo['id']}">{$vo['tag_name']}</span>
+					</volist>
+				</p>
+			</notempty>
 		</div>
-		
+		<div class="hbymarkdown">
+			{$data['fcontent']}
+		</div>
+	</div>
+<div class="div-block " >
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+  <!-- 详情页横幅 -->
+  <ins class="adsbygoogle"
+	   style="display:block;width:100%;height: 100px;"
+	   data-ad-client="ca-pub-8243302754537187"
+	   data-ad-slot="8980841980"
+	   ></ins>
+  <script>
+	(adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+</div>
+		<div class="div-block ">
+			<notempty name="silblings[0]">
+			<p class="pre-art"><a href="{:U("Article/detail")}?id={$silblings[0]['id']}">上一篇:&nbsp;&nbsp;<span class="title">{$silblings[0]['title']}</span></a></p>
+			</notempty>
+			<notempty name="silblings[1]">
+				<p  class="next-art"><a href="{:U("Article/detail")}?id={$silblings[1]['id']}">下一篇:&nbsp;&nbsp;<span class="title">{$silblings[1]['title']}</span></a></p>
+			</notempty>
+		</div>
 		<div class="comment-div">
 			<ul class="comment-list">
 				
@@ -32,18 +57,26 @@
 			<p class="reply-tip" style="display:none;"><span></span>&nbsp;&nbsp;<i class="remove" style="cursor:pointer;">X</i></p>
 			<textarea name="comment"></textarea>
 			<input type="text" name="checkcode" placeholder="验证码" maxlength="4">
-			<img class="checkimg" src="{:U('Verify/verify1')}">
-			<input class="postcomment" type="button" value="提交">
+			<img class="checkimg" src="" style="display:none;">
+			<button class="getverify">点击获取验证码</button>
+			<input class="postcomment" type="button" value="评论" style="display: none;">
 		</div>
 	</div>
 	<include file="Public/footer" />
 	<!-- 底部end -->
+
+<link href="/Public/plugin/hbyedit/css/markdown.css" rel="stylesheet">
+<link href="https://cdn.bootcss.com/highlight.js/8.0/styles/monokai_sublime.min.css" rel="stylesheet">
+<link href="/Public/css/highlightdiy.css" rel="stylesheet">
+<script type="text/javascript" src="/Public/plugin/hbyedit/js/marked.js"></script>
+<script src="https://cdn.bootcss.com/highlight.js/8.0/highlight.min.js"></script>
 </body>
 	<script>
+		var verifysrc = "{:U('Verify/verify1')}";
 	var pid = 0;
 	  var checkreg = {
 	            'username':/^[\u4e00-\u9fa5A-Za-z0-9_]{2,16}$/,
-	            'email':/^([0-9A-Za-z_\-]+)@[0-9a-z]+\.[a-z]{2,3}$/,
+	            'email':/^([0-9A-Za-z_\.\-]+)@[0-9a-z]+\.[a-z]{2,3}$/,
 	             'password':/^[A-Za-z0-9_\.\+\*\-]{6,16}$/,
 	             'number':/^[0-9]+$/
 	         };
@@ -71,7 +104,7 @@
 		$.ajax({
 			url:'{:U('Comment/morechild')}',
 			data:{
-				aid:{$data['id']},
+				aid:"{$data['id']}",
 				pid:id,
 				page:page
 			},
@@ -94,7 +127,14 @@
 		});
 		
 	});
-	
+
+	$('.getverify').click(function (e) {
+		e.preventDefault();
+        $('.checkimg').attr('src',verifysrc);
+        $(this).hide();
+        $('.checkimg').show();
+        $('.postcomment').show();
+    });
 	$('.checkimg').click(function(){
 		$(this).attr('src',$(this).attr('src')+'?'+Math.random());
 	});
@@ -130,7 +170,6 @@
             	 alert('评论不能为空');
                  return false;
             }
-
 		if(ajaxini){
 			ajaxini = false;
 			if(pid>0){
@@ -142,7 +181,7 @@
 					username:username,
 					email:email,
 					comment:comment,
-					aid:{$data['id']},
+					aid:"{$data['id']}",
 					pid:pid,
 					verify:checkcode
 				},
@@ -159,7 +198,10 @@
 			});
 		}
 	})
-	
+	$('.tags-list').on('click','span',function (e) {
+		e.preventDefault();
+		window.location.href="{:U('Index/index')}?tag="+$(this).attr('data-id');
+    });
 	//评论加载
 	var page = 1;
 	function getcommentlist(){
@@ -177,15 +219,17 @@
 					if(data.code==200){
 						var str = '';
 						for(var i in data.data){
-							str +='<li class="list-item"><div class="parent-comment"><div class="user-avatar"><img class="avatar" src="/Public/images/default_avatar.jpg" />';
+							str +='<li class="list-item"><div class="parent-comment"><div class="user-avatar"><img class="avatar" src="'+data.data[i]['gavatar']+'" />';
 							str +='<span>'+data.data[i]['user_name']+'</span></div><div class="commet-content">';
+
+                            data.data[i]['content'] = data.data[i]['content'].replace(/\n/g, "<br />");
 							str +='<div><p>'+data.data[i]['content']+'</p></div>';
 							str +='<div class="info"><p><a data-id="'+data.data[i]['id']+'" data-name="'+data.data[i]['user_name']+'" class="reply"><span>回复</span></a>&nbsp;&nbsp;&nbsp;<span>'+data.data[i]['add_time']+'</span></p></div></div></div>';
 							if(data.data[i]['children']){
 								str +='<div class="child-comment"><ul>';
 								for(var j in data.data[i]['children']){
-									str +='<li><div class="child-comment-item"><div class="user-avatar"><img class="avatar" src="/Public/images/default_avatar.jpg" /><span>'+data.data[i]['children'][j]['user_name']+'</span></div>';
-									str +='<div class="commet-content"><div><p>'+data.data[i]['children'][j]['content']+'</p></div>';
+									str +='<li><div class="child-comment-item"><div class="user-avatar"><img class="avatar" src="'+data.data[i]['children'][j]['gavatar']+'"/><span>'+data.data[i]['children'][j]['user_name']+'</span></div>';
+									str +='<div class="commet-content"><div><p>'+data.data[i]['children'][j]['content'].replace(/\n/g, "<br />")+'</p></div>';
 									str +='<div class="info"><p><a data-id="'+data.data[i]['id']+'" data-name="'+data.data[i]['children'][j]['user_name']+'" class="reply"><span>回复</span></a>&nbsp;&nbsp;&nbsp;<span>'+data.data[i]['children'][j]['add_time']+'</span></p></div></div></div></li>';
 								}
 								str +='</ul><p class="more-child-comment" data-id="'+data.data[i]['id']+'" data-page="2">加载更多</p></div>';
@@ -201,12 +245,23 @@
 			});
 		}
 	}
-	
-	
+
 	getcommentlist();
 	$('.more-comment').click(function(){
 		$(this).hide();
 		getcommentlist();
 	});
+
+	//渲染
+	/*
+    marked.setOptions({
+        highlight: function (code) {
+            return hljs.highlightAuto(code).value;
+        }
+    });
+
+    var obj = $('#tcontent').parent();
+    obj.html(marked($('#tcontent').val()));
+	 */
 	</script>
 </html>

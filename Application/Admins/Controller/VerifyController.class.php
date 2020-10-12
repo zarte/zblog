@@ -9,6 +9,7 @@ class VerifyController extends Controller {
     
     private function get_verify($type){
         $Verify = new \Think\Verify();
+
         $Verify->imageW = 80;
         $Verify->imageH = 30;
         $Verify->fontSize = 17;
