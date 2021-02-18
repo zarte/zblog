@@ -1,0 +1,106 @@
+
+	<style>
+
+	</style>
+	<div class="content-main">
+		<div>
+			<button  class="btn-normal reload-btn" ><i class="icon iconfont">&#xe61d;</i>刷新</button>
+		</div>
+		<div style="padding:0 20px;">
+			<form id="webinfo">
+				<div class="hby-form-item">
+					<label class="hby-form-label">
+					站点标题
+					</label>
+					<div class="hby-form-block">
+						<input type="text" name="title" autocomplete="off" placeholder="请输入标题" class="hby-input" value="{$webinfo['web_name']}">
+					</div>
+				</div>
+				<div class="hby-form-item">
+					<label class="hby-form-label">
+						开关
+					</label>
+					<div class="hby-form-block dpfl">
+						<label class="iSwitch">
+							<if condition="$webinfo['web_status'] eq 1">
+									<input type="checkbox" name="webstatus"  checked="checked">
+								<else/>
+									<input type="checkbox" name="webstatus" >
+							</if>
+							<i></i>
+						</label>
+					</div>
+				</div>
+				<div class="hby-form-item">
+					<label class="hby-form-label">
+						站点介绍
+					</label>
+					<div class="hby-form-block">
+						<textarea class="hby-textarea" name="content">{$webinfo['web_desc']}</textarea>
+					</div>
+				</div>
+
+				<div class="hby-form-item">
+					<label class="hby-form-label"></label>
+					<div class="hby-form-block">
+						<button class="btn-normal save_set">保存</button>
+						<button class="btn-normal createmap">生产站点地图</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+
+<script type="text/javascript">
+	var ajaxini = true;
+    HBYPageobj.render({
+        loadpagefun:'',
+        geturl:"{:U('Index/setting')}",
+        pagenum:0
+    });
+    $('.save_set').off().click(function (e) {
+		e.preventDefault();
+        HBYLayer.layer_shade();
+		$.ajax({
+			url:"{:U('Index/saveset')}",
+			type:'post',
+			dataType:'json',
+			data:$('#webinfo').serialize(),
+			success:function (res) {
+                HBYLayer.layer_shade('remove');
+				if(res.code==200){
+
+                    HBYLayer.tip('保存成功');
+				}else{
+                    HBYLayer.tip(res.msg);
+				}
+            },
+			error:function () {
+                HBYLayer.layer_shade('remove');
+				alert('系统错误!');
+            }
+		})
+    });
+    $('.createmap').off().click(function (e) {
+        e.preventDefault();
+        HBYLayer.layer_shade();
+        $.ajax({
+            url:"{:U('Index/createsitemap')}",
+            type:'post',
+            dataType:'json',
+            success:function (res) {
+                HBYLayer.layer_shade('remove');
+                if(res.code==200){
+                    HBYLayer.tip('创建成功');
+                }else{
+                    HBYLayer.tip(res.msg);
+                }
+            },
+            error:function () {
+                HBYLayer.layer_shade('remove');
+                alert('系统错误!');
+            }
+        })
+    });
+
+</script>

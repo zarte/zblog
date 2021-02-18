@@ -1,0 +1,79 @@
+
+	<div class="content-main">
+		<div>
+			<button  class="btn-normal reload-btn" ><i class="icon iconfont">&#xe61d;</i>刷新</button>
+		</div>
+
+		<div style="padding:0 20px;">
+			<p>cpu使用量：<span class="usecpu">{$cpu}</span>  内存使用量:<span class="usememory">{$memory['usage']}</span></p>
+			<div id="cupstatus" style="width:400px;height:300px;"></div>
+			<div id="memstatus" style="width:400px;height:300px;"></div>
+		</div>
+	</div>
+
+<script src="/Public/plugin/echarts/echarts4.4.min.js"></script>
+<script type="text/javascript">
+	var ajaxini = true;
+    HBYPageobj.render({
+        loadpagefun:'',
+        geturl:"{:U('Index/system')}",
+        pagenum:0
+    });
+
+    var cupChart = echarts.init(document.getElementById('cupstatus'));
+    var memChart = echarts.init(document.getElementById('memstatus'));
+    var cpudata = [[],[]];
+    var memdata =[[],[]];
+    //更新系统信息
+	var refreshobj = setInterval(function () {
+		$.ajax({
+			url:"{:U('Index/system')}",
+			data:{
+			    'ajax':1
+			},
+			type:'post',
+			dataType:'json',
+			success:function (res) {
+			    if(res.code==200){
+                    $('.usecpu').text(res.cpu+'%');
+                    $('.usememory').text(res.memory.usage+'%');
+                    var myDate = new Date();//获取系统当前时间
+					var time =myDate.getHours()+':'+myDate.getMinutes();
+                    cpudata[0].push(time);
+                    memdata[0].push(time);
+                    cpudata[1].push(res.cpu);
+                    memdata[1].push(res.memory.usage);
+                    refeshchart(cupChart,cpudata);
+                    refeshchart(memChart,memdata);
+				}
+				if($('.usecpu').length==0){
+					clearInterval(refreshobj);
+				}
+
+            }
+		})
+    },10000);
+
+    function refeshchart(chartobj,data) {
+        // 指定图表的配置项和数据
+        var option = {
+            xAxis: {
+                type: 'category',
+                boundaryGap: false,
+                data: data[0]
+            },
+            yAxis: {
+                type: 'value'
+            },
+            series: [{
+                data: data[1],
+                type: 'line',
+                areaStyle: {}
+            }]
+        };
+        // 使用刚指定的配置项和数据显示图表。
+        chartobj.setOption(option,true);
+    }
+
+
+</script>

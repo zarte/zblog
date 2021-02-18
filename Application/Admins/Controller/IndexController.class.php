@@ -123,6 +123,7 @@ class IndexController extends BaseController {
         }
         $res = $this->createsitexml($list,'https://'.DOMAIN.'/');
         $res2 = $this->createsitehtml($list,'https://'.DOMAIN.'/');
+        $this->createsiterss($list,'https://'.DOMAIN.'/');
         if($res && $res2){
             echo '{"code":200}';
         }else{
@@ -130,6 +131,31 @@ class IndexController extends BaseController {
         }
 
 
+    }
+    private function createsiterss($list,$domain){
+        $str ='';
+        $str .=  '<?xml version="1.0" encoding="UTF-8" ?>'."\r\n";
+        $str .= '<rss version="2.0">'."\r\n";
+        $str .= '<channel>'."\r\n";
+        $str .= '<title>黑蝶博客</title>'."\r\n";
+        $str .= '<link>'.$domain.'</link>'."\r\n";
+        $str .= '<description>编程技术等教程分享，bug修复记录。</description>'."\r\n";
+
+        foreach ($list as $v){
+            $str .= '<item>'."\r\n";
+            $str .= '<title>'.$v['title'].'</title>'."\r\n";
+            $str .= '<link>'.$domain.'index.php/Home/Article/detail.html?id='.$v['id'].'</link>'."\r\n";
+            $str .= '<description>'.$v['summarize'].'</description>'."\r\n";
+            $str .= '</item>'."\r\n";
+        }
+
+        $str .='</channel></rss>';
+        $res = file_put_contents('./rss.xml',$str);
+        if($res){
+            return true;
+        }else{
+            return false;
+        }
     }
 
     private function createsitexml($list,$domain){
